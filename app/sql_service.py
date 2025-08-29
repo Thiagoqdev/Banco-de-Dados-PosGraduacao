@@ -1,5 +1,6 @@
 from datetime import datetime
 from models import Cliente, db, Produto, Venda
+from sqlalchemy.orm import joinedload
 
 
 def criar_cliente(nome, email, cpf, data_nascimento):
@@ -73,6 +74,9 @@ def deletar_produto(id):
         db.session.commit()
     return produto
 
+def obter_produto(id_produto):
+    return Produto.query.get(id_produto)
+
 # ----------------- VENDAS -----------------
 def criar_venda(id_cliente, id_produto, valor_total):
 
@@ -84,3 +88,23 @@ def criar_venda(id_cliente, id_produto, valor_total):
 
 def listar_vendas():
     return Venda.query.all()
+
+def atualizar_venda(id_pedido):
+    venda = Venda.query.get(id_pedido)
+    if venda:
+        if data_pedido:
+            venda.data_pedido = datetime.strptime(data_pedido, "%Y-%m-%d %H:%M:%S")
+        if valor_totalis is not None:
+            venda.valor_total = valor_total
+        db.session.commit()
+    return venda
+
+def deletar_venda(id_pedido):
+    venda = Venda.query.get(id_pedido)
+    if venda:
+        db.session.delete(venda)
+        db.session.commit()
+    return venda
+
+def obter_venda(id_pedido):
+    return Venda.query.get(id_pedido)

@@ -1,10 +1,14 @@
 from flask import Flask, jsonify, request
 from sqlalchemy.orm import joinedload
 
-from app import sql_service
-from app.nosql_service import obter_dashboard_total, registrar_dashboard_total
-from models import db, Cliente, Venda
-from sql_service import criar_cliente, obter_cliente, listar_clientes, atualizar_cliente, deletar_cliente, listar_produtos, criar_produto, deletar_produto
+from nosql_service import obter_dashboard_total, registrar_dashboard_total
+
+from models import db, Cliente, Venda, Produto
+
+from sql_service import (
+    criar_cliente, obter_cliente, listar_clientes, 
+    atualizar_cliente, deletar_cliente, deletar_produto, atualizar_produto,obter_produto, obter_venda, deletar_venda
+)
 from config import SQLALCHEMY_DATABASE_URI
 
 app = Flask(__name__)
@@ -108,6 +112,32 @@ def deletar_produto_route(produto_id):
 
     return jsonify({"mensagem": "Produto deletado com sucesso"})
 
+@app.route("/produtos/<int:id_produto>", methods=["PUT"])
+def atualizar_produto_route(id_produto):
+    data = request.json
+    produto = atualizar_produto(
+        id_produto,
+        nome=data.get("nome"),
+        preco=data.get("preco"),
+        estoque=data.get("estoque")
+    )
+    if not produto:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify({"mensagem": "Produto atualizado com sucesso!"})
+
+@app.route("/produtos/<int:id_produto>", methods=["GET"])
+def obter_produto_route(id_produto):
+    produto = obter_produto(id_produto)
+    if not produto:
+        return jsonify({"erro": "Produto não encontrado"}), 404
+    return jsonify({
+        "id": produto.id_produo,
+        "nome": produto.nome,
+        "preco": produto.preco,
+        "descricao": produto.descricao,
+        "categoria": produto.catergoria
+    })
+
 # Vendas
 
 @app.route("/vendas", methods=["GET"])
@@ -136,6 +166,36 @@ def post_venda():
     if not venda:
         return jsonify({"erro": "Produto inexistente ou estoque insuficiente"}), 400
     return jsonify({"id": venda.id_pedido}), 201
+
+@app.route("/vendas/<int:id_pedido>", methods=["PUT"])
+def atualizar_vendas_route(id_pedido):
+    data = request.json
+    venda = sql_service.atualizar_venda(data["id_cliente"], data["id_protudo"], data["valor_total"])
+    if not venda:
+        return jsonify({"erro": "Pedido não encontrado, entre em contato com o administrador"}), 404
+    return jsonify({"id": venda.id_pedido}), 201
+
+@app.route("/vendas/<int:id_pedido>", methods=["GET"])
+def obter_vendas_route(id_pedido):
+    venda = obter_venda(id_pedido)
+    if not venda:
+        return jsonify({"erro": "Venda não encontrada"}), 404
+    
+    return jsonify({
+        "id_pedido": venda.id_pedido,
+        "id_cliente": venda.id_cliente,
+        "id_produto": venda.id_produto,
+        "data_pedido": venda.data_pedido.strftime("%d-%m-%Y %H:%M:%S"),
+        "valor_total": venda.valor_total
+    })
+
+@app.route("/vendas/<int:id_pedido>", methods=["DELETE"])
+def deletar_vendas_route(id_pedido):
+    venda = deletar_venda(id_pedido) # Chama a função do sql_service
+    if not venda:
+        return jsonify({"erro": "Venda não encontrada"}), 404
+
+    return jsonify({"mensagem": "Venda deletada com sucesso"})
 
 # MongoDB - Relatórios
 
