@@ -45,3 +45,39 @@ def obter_dashboard_total():
         doc = dashboard_collection.find_one({"_id": "total_clientes"})
         return doc["total"] if doc else 0
     return 0
+
+# Salva o total de produtos no MongoDB
+def registrar_dashboard_total_produtos(total_produtos):
+    if mongo_connected:
+        dashboard_collection.update_one(
+            {"_id": "total_produtos"},
+            {"$set": {"total": total_produtos}},
+            upsert=True
+        )
+    else:
+        print("[MongoDB] Registro ignorado (sem conexão)")
+
+# Busca o total de produtos no MongoDB
+def obter_dashboard_total_produtos():
+    if mongo_connected:
+        doc = dashboard_collection.find_one({"_id": "total_produtos"})
+        return doc["total"] if doc else 0
+    return 0
+
+# Salva o total de vendas no MongoDB
+def registrar_dashboard_total_vendas(total_vendas):
+    if mongo_connected:
+        dashboard_collection.update_one(
+            {"_id": "total_vendas"},
+            {"$set": {"total": total_vendas}},
+            upsert=True
+        )
+    else:
+        print("[MongoDB] Registro ignorado (sem conexão)")
+
+# Busca o total de vendas no MongoDB
+def obter_dashboard_total_vendas():
+    if mongo_connected:
+        doc = dashboard_collection.find_one({"_id": "total_vendas"})
+        return doc["total"] if doc else 0
+    return 0

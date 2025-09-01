@@ -1,5 +1,12 @@
+import app
 from flask import Flask, jsonify, request
 from sqlalchemy.orm import joinedload
+from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from config import SQLALCHEMY_DATABASE_URI
+from models import db
+import sql_service
+from dashboard import dashboard_bp
 
 from nosql_service import obter_dashboard_total, registrar_dashboard_total
 
@@ -12,14 +19,12 @@ from sql_service import (
 from config import SQLALCHEMY_DATABASE_URI
 
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-
 db.init_app(app)
 
 @app.route("/")
 def index():
-    return "Olá, mundo."
+    return "Deu certo !!!"
 
 @app.route("/clientes", methods=["GET"])
 def listar_clientes_route():
@@ -98,10 +103,23 @@ def get_produtos():
     produtos = sql_service.listar_produtos()
     return jsonify([{"id": p.id_produto, "nome": p.nome, "preco": p.preco, "descricao": p.descricao, "categoria": p.categoria} for p in produtos])
 
+"""@app.route("/produtos", methods=["POST"])
+def post_produto():
+    data = request.json
+    produto = sql_service.criar_produto(data["nome"], data["preco"], data["descricao"], data["categoria"])
+    return jsonify({"id": produto.id_produto}), 201
+"""
+
 @app.route("/produtos", methods=["POST"])
 def post_produto():
     data = request.json
     produto = sql_service.criar_produto(data["nome"], data["preco"], data["descricao"], data["categoria"])
+
+    from nosql_service import registrar_dashboard_total_produtos
+
+    total_produtos = len(sql_service.listar_produtos())
+    registrar_dashboard_total_produtos(total_produtos)
+
     return jsonify({"id": produto.id_produto}), 201
 
 @app.route("/produtos/<int:produto_id>", methods=["DELETE"])
@@ -109,6 +127,10 @@ def deletar_produto_route(produto_id):
     produto = deletar_produto(produto_id)
     if not produto:
         return jsonify({"erro": "Produto não encontrado"}), 404
+
+    from nosql_service import registrar_dashboard_total_produtos
+    total_produtos = len(sql_service.listar_produtos())
+    registrar_dashboard_total_produtos(total_produtos)
 
     return jsonify({"mensagem": "Produto deletado com sucesso"})
 
@@ -131,11 +153,11 @@ def obter_produto_route(id_produto):
     if not produto:
         return jsonify({"erro": "Produto não encontrado"}), 404
     return jsonify({
-        "id": produto.id_produo,
+        "id": produto.id_produto,
         "nome": produto.nome,
         "preco": produto.preco,
         "descricao": produto.descricao,
-        "categoria": produto.catergoria
+        "categoria": produto.categoria
     })
 
 # Vendas
@@ -165,12 +187,16 @@ def post_venda():
     venda = sql_service.criar_venda(data["id_cliente"], data["id_produto"], data["valor_total"])
     if not venda:
         return jsonify({"erro": "Produto inexistente ou estoque insuficiente"}), 400
+    from nosql_service import registrar_dashboard_total_vendas
+    total_vendas = len(sql_service.listar_vendas())
+    registrar_dashboard_total_vendas(total_vendas)
+
     return jsonify({"id": venda.id_pedido}), 201
 
 @app.route("/vendas/<int:id_pedido>", methods=["PUT"])
 def atualizar_vendas_route(id_pedido):
     data = request.json
-    venda = sql_service.atualizar_venda(data["id_cliente"], data["id_protudo"], data["valor_total"])
+    venda = sql_service.atualizar_venda(data["id_cliente"], data["id_produdo"], data["valor_total"])
     if not venda:
         return jsonify({"erro": "Pedido não encontrado, entre em contato com o administrador"}), 404
     return jsonify({"id": venda.id_pedido}), 201
@@ -195,7 +221,18 @@ def deletar_vendas_route(id_pedido):
     if not venda:
         return jsonify({"erro": "Venda não encontrada"}), 404
 
+    from nosql_service import registrar_dashboard_total_vendas
+    total_vendas = len(sql_service.listar_vendas())
+    registrar_dashboard_total_vendas(total_vendas)
+
     return jsonify({"mensagem": "Venda deletada com sucesso"})
+
+app.register_blueprint(dashboard_bp)
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
 
 # MongoDB - Relatórios
 
@@ -204,6 +241,15 @@ def dashboard_total_clientes():
     total = obter_dashboard_total()
     return jsonify({"total_clientes": total})
 
+@app.route("/dashboard/total_produtos", methods=["GET"])
+def dashboard_total_produtos():
+    from nosql_service import obter_dashboard_total_produtos
+    total = obter_dashboard_total_produtos()
+    return jsonify({"total_produtos": total})
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route("/dashboard/total_vendas", methods=["GET"])
+def dashboard_total_vendas():
+    from nosql_service import obter_dashboard_total_vendas
+    total = obter_dashboard_total_vendas()
+    return jsonify({"total_vendas": total})
+

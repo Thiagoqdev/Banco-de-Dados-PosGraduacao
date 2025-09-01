@@ -89,14 +89,19 @@ def criar_venda(id_cliente, id_produto, valor_total):
 def listar_vendas():
     return Venda.query.all()
 
-def atualizar_venda(id_pedido):
+def atualizar_venda(id_pedido, id_cliente=None, id_produto=None, data_pedido=None, valor_total=None):
     venda = Venda.query.get(id_pedido)
-    if venda:
-        if data_pedido:
-            venda.data_pedido = datetime.strptime(data_pedido, "%Y-%m-%d %H:%M:%S")
-        if valor_totalis is not None:
-            venda.valor_total = valor_total
-        db.session.commit()
+    if not venda:
+        return None
+    if id_cliente is not None:
+        venda.id_cliente = id_cliente
+    if id_produto is not None:
+        venda.id_produto = id_produto
+    if data_pedido is not None:
+        venda.data_pedido = datetime.strptime(data_pedido, "%Y-%m-%d %H:%M:%S")
+    if valor_total is not None:
+        venda.valor_total = valor_total
+    db.session.commit()
     return venda
 
 def deletar_venda(id_pedido):
