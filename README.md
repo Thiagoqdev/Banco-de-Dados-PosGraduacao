@@ -1,44 +1,42 @@
-Sistema de Gestão de Vendas - Dashboard Integrado
-Desenvolvido por:  
+# Sistema de Gestão de Vendas - Dashboard Integrado
 
-Thiago Vinicius dos Santos Queiroz — RGM: 36995142
-
+**Desenvolvido por:**  
+Thiago Vinicius dos Santos Queiroz — RGM: 36995142  
 Lucas Vynicius Gonçalves Albuquerque — RGM: 39905535
 
-Descrição
-Sistema completo para gestão de vendas, clientes e produtos, com dashboard integrado.
+---
 
-Desenvolvido em Python (Flask), utiliza MySQL para dados principais e MongoDB para o dashboard.
+## 📋 Descrição
 
-Funcionalidades
+Sistema completo para **gestão de vendas, clientes e produtos**, com dashboard integrado.  
+Desenvolvido em **Python (Flask)**, utiliza **MySQL** para os dados principais e **MongoDB** para o dashboard.
 
-Cadastro, consulta, atualização e exclusão de clientes
+---
 
-Cadastro, consulta, atualização e exclusão de produtos
+## ⚙️ Funcionalidades
 
-Cadastro, consulta, atualização e exclusão de vendas
+- Cadastro, consulta, atualização e exclusão de **clientes**
+- Cadastro, consulta, atualização e exclusão de **produtos**
+- Cadastro, consulta, atualização e exclusão de **vendas**
+- Dashboard com totais de clientes, produtos e vendas (**MongoDB**)
+- **API RESTful** pronta para integração com front-end ou ferramentas como Postman
 
-Dashboard com totais de clientes, produtos e vendas (MongoDB)
+---
 
-API RESTful pronta para integração com front-end ou Postman
+## 🛠 Tecnologias Utilizadas
 
-Tecnologias Utilizadas
+- Python 3
+- Flask
+- Flask-SQLAlchemy
+- PyMySQL
+- PyMongo
+- MySQL
+- MongoDB
 
-Python 3
+---
 
-Flask
+## 📁 Estrutura do Projeto
 
-Flask-SQLAlchemy
-
-PyMySQL
-
-PyMongo
-
-MySQL
-
-MongoDB
-
-Estrutura do Projeto
 .
 ├── main.py / app.py           # Arquivo principal da aplicação Flask
 ├── config.py                  # Configurações dos bancos de dados
@@ -48,16 +46,19 @@ Estrutura do Projeto
 ├── dashboard.py               # Blueprint do dashboard
 └── requirements.txt           # Dependências do projeto
 
-Como Executar
-1. Pré-requisitos
+---
 
-Python 3 instalado
+## 🚀 Como Executar
 
-MySQL Server rodando e banco criado (ex: bdpos)
+### 1. Pré-requisitos
 
-MongoDB rodando localmente
+- Python 3 instalado
+- MySQL Server rodando e banco criado (ex: `bdpos`)
+- MongoDB rodando localmente
 
-2. Instale as dependências
+### 2. Instale as dependências
+
+```bash
 pip install -r requirements.txt
 
 3. Configure o banco de dados
@@ -80,7 +81,7 @@ python main.py
 
 Acesse: http://localhost:5000/
 
-Endpoints da API
+🛣️ Endpoints da API
 Clientes
 
 GET /clientes — Lista todos os clientes
@@ -125,7 +126,7 @@ GET /dashboard/total_produtos — Total de produtos (MongoDB)
 
 GET /dashboard/total_vendas — Total de vendas (MongoDB)
 
-Observações
+ℹ️ Observações
 
 As tabelas são criadas automaticamente ao rodar a aplicação.
 
@@ -133,7 +134,7 @@ Os totais do dashboard são atualizados a cada operação de cadastro ou exclus�
 
 Pronto para integração com front-end ou uso via Postman.
 
-Créditos
+👏 Créditos
 Projeto acadêmico desenvolvido por:
 
 Thiago Vinicius dos Santos Queiroz — RGM: 36995142
