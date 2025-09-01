@@ -1,16 +1,16 @@
-🚀 Sistema de Gestão de Vendas - Dashboard Integrado
+Sistema de Gestão de Vendas - Dashboard Integrado
 Desenvolvido por:  
 
-👨‍💻 Thiago Vinicius dos Santos Queiroz — RGM: 36995142
+Thiago Vinicius dos Santos Queiroz — RGM: 36995142
 
-👨‍💻 Lucas Vynicius Gonçalves Albuquerque — RGM: 39905535
+Lucas Vynicius Gonçalves Albuquerque — RGM: 39905535
 
-📋 Descrição
+Descrição
 Sistema completo para gestão de vendas, clientes e produtos, com dashboard integrado.
 
 Desenvolvido em Python (Flask), utiliza MySQL para dados principais e MongoDB para o dashboard.
 
-✨ Funcionalidades
+Funcionalidades
 
 Cadastro, consulta, atualização e exclusão de clientes
 
@@ -22,7 +22,7 @@ Dashboard com totais de clientes, produtos e vendas (MongoDB)
 
 API RESTful pronta para integração com front-end ou Postman
 
-🛠️ Tecnologias Utilizadas
+Tecnologias Utilizadas
 
 Python 3
 
@@ -38,7 +38,7 @@ MySQL
 
 MongoDB
 
-📁 Estrutura do Projeto
+Estrutura do Projeto
 .
 ├── main.py / app.py           # Arquivo principal da aplicação Flask
 ├── config.py                  # Configurações dos bancos de dados
@@ -48,8 +48,8 @@ MongoDB
 ├── dashboard.py               # Blueprint do dashboard
 └── requirements.txt           # Dependências do projeto
 
-🚦 Como Executar
-1️⃣ Pré-requisitos
+Como Executar
+1. Pré-requisitos
 
 Python 3 instalado
 
@@ -57,10 +57,10 @@ MySQL Server rodando e banco criado (ex: bdpos)
 
 MongoDB rodando localmente
 
-2️⃣ Instale as dependências
+2. Instale as dependências
 pip install -r requirements.txt
 
-3️⃣ Configure o banco de dados
+3. Configure o banco de dados
 No arquivo config.py, ajuste as conexões:
 
 # MySQL
@@ -75,12 +75,12 @@ Obs: Crie o banco bdpos no MySQL antes de rodar o sistema:
 
 CREATE DATABASE bdpos;
 
-4️⃣ Execute a aplicação
+4. Execute a aplicação
 python main.py
 
 Acesse: http://localhost:5000/
 
-🔗 Endpoints da API
+Endpoints da API
 Clientes
 
 GET /clientes — Lista todos os clientes
@@ -125,7 +125,7 @@ GET /dashboard/total_produtos — Total de produtos (MongoDB)
 
 GET /dashboard/total_vendas — Total de vendas (MongoDB)
 
-⚠️ Observações
+Observações
 
 As tabelas são criadas automaticamente ao rodar a aplicação.
 
@@ -133,7 +133,7 @@ Os totais do dashboard são atualizados a cada operação de cadastro ou exclus�
 
 Pronto para integração com front-end ou uso via Postman.
 
-👨‍🎓 Créditos
+Créditos
 Projeto acadêmico desenvolvido por:
 
 Thiago Vinicius dos Santos Queiroz — RGM: 36995142
